@@ -32,12 +32,16 @@ void setup(){
   // paddle variables
   paddleWidth = 25;
   paddleHeight = 100;
-  paddleSpeed = 2;
+  paddleSpeed = 5;
   paddle1X = 50;
   paddle1Y = height/2 - paddleHeight/2;
   
   paddle2X = width - 50 - paddleWidth;
   paddle2Y = height/2 - paddleHeight/2;
+  
+  // set paddle movement to 0 - no movement
+  paddle1DY = 0;
+  paddle2DY = 0;
 }
 
 void draw(){
@@ -80,21 +84,52 @@ void draw(){
     ballY = height/2;
   }
   
+  // stop paddle movement
+  paddle1DY = 0;
+  paddle2DY = 0;
   
   // see if a key is pressed
   if(keyPressed){
+    
     // if w is pressed
     if(key == 'w'){
+      // move the paddle1 up
       paddle1DY = -1;
     // is the s key pressed
     }else if(key == 's'){
+      // move paddle1 down
       paddle1DY = 1;
     // if no key for player 1 is pressed
-    }else{
-      // stop moving the paddle
-      paddle1DY = 0;
     }
     
+    if(keyCode == UP){
+      paddle2DY = -1;
+    }else if(keyCode == DOWN){
+      paddle2DY = 1;
+    }
+    
+  }
+  
+  // move paddle 1
+  paddle1Y = paddle1Y + paddle1DY*paddleSpeed;
+  // move paddle 2
+  paddle2Y = paddle2Y + paddle2DY*paddleSpeed;
+  
+  // does the ball hit the paddle2
+  if(!(ballX + ballSize/2 < paddle2X || 
+       ballY + ballSize/2 < paddle2Y ||
+       ballY - ballSize/2 > paddle2Y + paddleHeight)){
+    // make ball move to the left
+    ballDX = -1;
+  }
+  
+  // does the ball hit the paddle1
+  if(!(ballX - ballSize/2 > paddle1X + paddleWidth || 
+       ballY + ballSize/2 < paddle1Y ||
+       ballY - ballSize/2 > paddle1Y + paddleHeight)){
+    // make ball move to the right
+    ballDX = 1;
+  
   }
   
 }
