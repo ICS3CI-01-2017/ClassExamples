@@ -16,6 +16,10 @@ float paddleSpeed;
 float paddleWidth;
 float paddleHeight;
 
+// score variables
+int p1Score;
+int p2Score;
+
 void setup(){
   size(800,600);
   ellipseMode(CENTER);
@@ -25,9 +29,24 @@ void setup(){
   ballY = height/2;
   ballSpeed = 2;
   ballSize = 25;
-  // move the ball downwards right
-  ballDX = 1;
-  ballDY = 1;
+  
+  // setting initial ball movement
+  int ballXDirection = (int)random(0,10);
+  int ballYDirection = (int)random(0,10);
+  // random x movement
+  if(ballXDirection < 5 ){
+    ballDX = 1;
+  }else{
+    ballDX = -1;
+  }
+  // random y direction
+  if(ballYDirection < 5){
+    ballDY = 1;
+  }else{
+    ballDY = -1;
+  }
+  
+  
   
   // paddle variables
   paddleWidth = 25;
@@ -42,6 +61,10 @@ void setup(){
   // set paddle movement to 0 - no movement
   paddle1DY = 0;
   paddle2DY = 0;
+  
+  // initial scores to 0
+  p1Score = 0;
+  p2Score = 0;
 }
 
 void draw(){
@@ -75,6 +98,8 @@ void draw(){
     // reset the position
     ballX = width/2;
     ballY = height/2;
+    // give player 1 points
+    p1Score = p1Score + 1;
   }
   
   // ball hits lefthand side
@@ -82,6 +107,8 @@ void draw(){
     // reset the position
     ballX = width/2;
     ballY = height/2;
+    // give player 2 points
+    p2Score = p2Score + 1;
   }
   
   // stop paddle movement
@@ -131,5 +158,10 @@ void draw(){
     ballDX = 1;
   
   }
+  
+  // draw the score
+  textSize(40);
+  text(p1Score, width/2 - 100, 50);
+  text(p2Score, width/2 + 100, 50);
   
 }
