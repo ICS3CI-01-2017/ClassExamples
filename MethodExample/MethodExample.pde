@@ -1,11 +1,36 @@
+float playerX;
+float playerY;
+float playerDirection;
+float playerSpeed;
 
 void setup(){
   size(800,600);
+  // create player values
+  playerX = 200;
+  playerY = 200;
+  playerSpeed = 5;
+  playerDirection = 1;
 }
 
 void draw(){
+  playerX = playerX + playerDirection*playerSpeed;
+  if(playerX > width){
+    playerDirection = -1;
+  }else if(playerX < 0){
+    playerDirection = 1;
+  }
+  
   // black background
   background(0,0,0);
+  // calls our method to draw the mouse
+  drawMouse(playerX,playerY);
+  drawMouse(400,500);
+  drawMouse(700,300);
+  drawMouse(mouseX, mouseY);
+}
+
+
+void drawMouse(float x, float y){
   // white filled shapes
   fill(255,255,255);
   
@@ -14,15 +39,15 @@ void draw(){
   // turn off the outline
   noStroke();
   // draw the head of Mickey
-  ellipse(400,300,250,250);
+  ellipse(x,y,250,250);
   // drawing the left ear
-  ellipse(400 - 250/2,300 - 250/2, 120, 120);
+  ellipse(x - 250/2,y - 250/2, 120, 120);
   // drawing the right ear
-  ellipse(400 + 250/2,300 - 250/2, 120, 120);
+  ellipse(x + 250/2,y - 250/2, 120, 120);
   // change colour to black
   fill(0,0,0);
   // left eye
-  ellipse(400 - 50, 300 - 50, 50, 75);
+  ellipse(x - 50, y - 50, 50, 75);
   // right eye
-  ellipse(400 + 50, 300 - 50, 50, 75);
+  ellipse(x + 50, y - 50, 50, 75);
 }
