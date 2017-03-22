@@ -5,14 +5,20 @@ float playerX, playerY, playerW, playerH;
 float blockX, blockY, blockW, blockH;
 // block variables
 float blockX2, blockY2, blockW2, blockH2;
+// block variables
+float blockX3, blockY3, blockW3, blockH3;
+
 
 // control variables
 boolean right, left, up, down;
+
+int level;
 
 
 void setup() {
   size(800, 600);
 
+  level = 1;
   // initial player position
   playerX = 100;
   playerY = 250;
@@ -29,6 +35,11 @@ void setup() {
   blockY2 = 175;
   blockW2 = 50;
   blockH2 = 100;
+  
+  blockX3 = 375;
+  blockY3 = 475;
+  blockW3 = 50;
+  blockH3 = 50;
 
   // control values
   right = false;
@@ -42,17 +53,6 @@ void draw() {
   // black background
   background(0);
 
-  // draw block
-  // blue fill
-  fill(0, 0, 255);
-  rect(blockX, blockY, blockW, blockH);
-  rect(blockX2, blockY2, blockW2, blockH2);
-
-  // draw the player
-  // red fill
-  fill(255, 0, 0);
-  rect(playerX, playerY, playerW, playerH);
-
   // player controls
   if (right) {
     playerX = playerX + 3;
@@ -65,6 +65,23 @@ void draw() {
   } else if (down) {
     playerY = playerY + 3;
   }
+  
+  // level 1
+  
+  // draw block
+  // blue fill
+  fill(0, 0, 255);
+  rect(blockX, blockY, blockW, blockH);
+  rect(blockX2, blockY2, blockW2, blockH2);
+  
+  fill(255,0,255);
+  rect(blockX3, blockY3, blockW3, blockH3);
+
+  // draw the player
+  // red fill
+  fill(255, 0, 0);
+  rect(playerX, playerY, playerW, playerH);
+
 
   // does the player hit the block
   if (collides(playerX, playerY, playerW, playerH, blockX, blockY, blockW, blockH)) {
@@ -76,6 +93,44 @@ void draw() {
   if (collides(playerX, playerY, playerW, playerH, blockX2, blockY2, blockW2, blockH2)) {
     // call the method to fix collision
     fixCollision(blockX2, blockY2, blockW2, blockH2);
+  }
+  
+  // does the player hit the block
+  if (collides(playerX, playerY, playerW, playerH, blockX3, blockY3, blockW3, blockH3)) {
+      level = level + 1;  
+    
+      // teleport
+      playerX = 100;
+      playerY = 300;
+      
+      if(level == 2){
+        blockX = 400;
+        blockY = 100;
+        blockW = 200;
+        blockH = 50;
+        
+        blockX2 = 100;
+        blockY2 = 100;
+        blockW2 = 20;
+        blockH2 = 100;
+      }else if(level == 3){
+        blockX = 200;
+        blockY = 400;
+        blockW = 10;
+        blockH = 150;
+        
+        blockX2 = 150;
+        blockY2 = 200;
+        blockW2 = 70;
+        blockH2 = 70;
+      }
+  }
+  
+  if(playerX + playerW < 0){
+    playerX = width;
+  }
+  if(playerX > width){
+    playerX = -playerW;
   }
   
 }
