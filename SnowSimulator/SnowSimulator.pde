@@ -4,8 +4,9 @@ float[] alpha;
 int num;
 
 void setup(){
-  size(800,600);
-  num = 1000;
+  //size(800,600);
+  fullScreen();
+  num = 300;
    x = new float[num];
    y = new float[num];
    alpha = new float[num];
@@ -21,7 +22,7 @@ void setup(){
 void draw(){
  background(0);
  for(int i = 0; i < num; i++){
-   y[i] = y[i] + 3;
+   y[i] = y[i] + 10*alpha[i]/255;
    if(y[i] > height){
      // generate new coordinate
      x[i] = random(0, width);
