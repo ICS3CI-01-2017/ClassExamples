@@ -32,6 +32,13 @@ void setup(){
   
   // set the number of pieces
   numPieces = 1;
+  
+  // fill array with negative numbers
+  // so you don't see a flashing block
+  for(int i = 0; i < 1000; i++){
+    snakeX[i] = -100;
+    snakeY[i] = -100;
+  }
   // set the starting position of snake
   snakeX[0] = width/2;
   snakeY[0] = height/2;
@@ -40,14 +47,14 @@ void setup(){
   size = 25;
   
   // speed of snake
-  snakeSpeed = 0.5; // seconds of delay
+  snakeSpeed = 0.2; // seconds of delay
   
   // with 800x600 - 
   //     31 spots across
   //     23 spots down
   // random apple position
-  appleX = random(0,31)*25;
-  appleY = random(0,23)*25;
+  appleX = (int)random(0,31)*25;
+  appleY = (int)random(0,23)*25;
   
   // set starting direction
   direction = 's';
@@ -60,17 +67,48 @@ void setup(){
 void draw(){
   // black background
   background(0);
-  
+ 
   // draw snake and apple
   drawScreen();
   // change snake direction - automatically
   // move snake
   moveSnake();
   // check if hit an apple
-      // if hit apple
-          // grow snake
-          // move apple
+  // is the head of the snake on the apple
+  if(snakeX[0] == appleX && 
+     snakeY[0] == appleY){
+     // grow snake
+     numPieces = numPieces + 1;
+     // move apple
+     appleX = (int)random(0,31)*25;
+     appleY = (int)random(0,23)*25;
+  }
+      
   // check if hit walls/self
+  // walls
+  if(snakeX[0] < 0 || snakeX[0] >= width ||
+     snakeY[0] < 0 || snakeY[0] >= height){
+       // stop the game
+       noLoop();
+       // game over message
+       textSize(40);
+       text("Game Over!", width/2 - 125, height/2);
+  }
+  // snake hitting itself
+  // look to see if the head is the same
+  // as any other piece
+  for(int i = 1; i < numPieces; i++){
+    // is the head equal to another part  
+    if(snakeX[0] == snakeX[i] &&
+         snakeY[0] == snakeY[i]) {
+       // game over man!
+       // stop the game
+       noLoop();
+       // game over message
+       textSize(40);
+       text("Game Over!", width/2 - 125, height/2);
+    }
+  }
   
 }
 
@@ -110,9 +148,18 @@ void keyPressed(){
 void moveSnake(){
   // get current time in milliseconds
   float currentTime = millis(); 
-  
+
   // check if timer is up to move
   if(currentTime > nextTime){
+    
+    // shuffle pieces down to make room
+    // for the new position
+    for(int i = numPieces - 1; i > 0; i--){
+      snakeX[i] = snakeX[i-1];
+      snakeY[i] = snakeY[i-1];
+    }
+    
+    
     // check which direction to move
     if(direction == 'u'){
       // move snake up
