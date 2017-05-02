@@ -1,0 +1,42 @@
+// position of the snake body
+float[] snakeX;
+float[] snakeY;
+// snake speed
+float snakeSpeed;
+
+
+// apple coordinates
+float appleX;
+float appleY;
+
+// direction
+char direction;
+
+// size of objects
+float size;
+
+// delay
+float timeDelay;
+float lastTime;
+
+// number of pieces
+int numPieces;
+
+void setup(){
+  // 800x600 screen size
+  size(800,600);
+  
+  // create room for 1000 snake pieces
+  snakeX = new float[1000];
+  snakeY = new float[1000];
+  
+  // set the number of pieces
+  numPieces = 1;
+  // set the starting position of snake
+  snakeX[0] = width/2;
+  snakeY[0] = height/2;
+}
+
+void draw(){
+  
+}
