@@ -25,7 +25,7 @@ int numPieces;
 void setup(){
   // 800x600 screen size
   size(800,600);
-  
+
   // create room for 1000 snake pieces
   snakeX = new float[1000];
   snakeY = new float[1000];
