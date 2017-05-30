@@ -9,7 +9,10 @@ float[] blockX, blockY, blockW, blockH;
 int numBlocks;
 
 // control variables
-boolean right, left, jump, isJumping;
+boolean right, left, jump, isJumping, doubleJump;
+
+// camera coordinates
+float camX, camY;
 
 void setup(){
   size(800,600);
@@ -20,6 +23,10 @@ void setup(){
   h = 100;
   dy = 0;
   
+  // camera at 0
+  camX = 0;
+  camY = 0;
+  
   // gravity force
   gravity = 1;
   
@@ -28,9 +35,10 @@ void setup(){
   left = false;
   jump = false;
   isJumping = false; // on ground or not
+  doubleJump = false; // keeping track if double jump is used
   
   // blocks
-  numBlocks = 5;
+  numBlocks = 6;
   blockX = new float[numBlocks];
   blockY = new float[numBlocks];
   blockW = new float[numBlocks];
@@ -61,6 +69,11 @@ void setup(){
   blockY[4] = 450;
   blockW[4] = 50;
   blockH[4] = 50;
+  
+  blockX[5] = 775;
+  blockY[5] = 500;
+  blockW[5] = 650;
+  blockH[5] = 100;
 }
 
 void draw(){
@@ -70,12 +83,12 @@ void draw(){
   // draw the blocks
   for(int i = 0; i < numBlocks; i++){
      fill(0); // fill black
-     rect(blockX[i], blockY[i], blockW[i], blockH[i]);
+     rect(blockX[i] - camX, blockY[i] - camY, blockW[i], blockH[i]);
   }
   
   // draw player
   fill(255,0,0); // fill red
-  rect(x,y,w,h);
+  rect(x - camX,y - camY,w,h);
   
   // player movement
   if(left){
@@ -90,23 +103,47 @@ void draw(){
     isJumping = true; // now in air
     dy = -20; // lots of upward force
   }
+  
+  // jump is pressed, in air, haven't double jumped, and falling
+  if(jump && isJumping 
+          && !doubleJump && dy >= 0){
+    dy = -20;
+    doubleJump = true;
+  }
   // apply gravity to the force
   dy = dy + gravity;
   
   // apply the force to player
   y = y + dy;
   
+  
+  // move camera after character passes half screen
+  if(x > width/2){
+    camX = x - width/2;
+  }
+  
+  // check to see if i should be falling
+  // assuming not hitting something
+  boolean colliding = false;
   // go through all blocks looking for collisions
   for(int i = 0; i < numBlocks; i++){
     // is player hitting a block?
     if(collides(x, y, w, h, 
                 blockX[i], blockY[i], 
                 blockW[i], blockH[i])){
+       // tell variable i am hitting something
+       colliding = true;
        // fix the collision
        fixCollision(blockX[i], blockY[i], 
                     blockW[i], blockH[i]);
     }
   }
+  
+  // avoid "air jumping"
+  if(!colliding){
+    isJumping = true;
+  }
+  
 }
 
 void keyPressed(){
@@ -161,10 +198,16 @@ void fixCollision(float x1, float y1, float w1, float h1) {
       x = x + overWidth;
     }
   } else {
+    // stop gravity pulling me down
+    dy = 0;
+    
     // fixing the Y axis
     // are we above or below the block
     if (y < y1) {
       // above the block, subtract
+      // standing on block!
+      isJumping = false;
+      doubleJump = false;
       y = y - overHeight;
     } else {
       // below the block, add
